@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+//import AppBarExample from './Components/app_bar';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import NavBar from './Components/nav_bar';
+import SearchBar from './Components/search_bar';
+//import AppBar from 'material-ui/AppBar';
+
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+      <MuiThemeProvider>
+      <div>
+        <NavBar/>
+        <SearchBar />
+      </div>
+      </MuiThemeProvider>
+      <h2>Muven</h2>
+      <h5>Booking and Networking Apllication for Musicians and Venues</h5>
       </div>
     );
   }
