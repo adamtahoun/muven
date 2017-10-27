@@ -4,7 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import NavBar from './Components/nav_bar';
 import SearchBar from './Components/search_bar';
 //import AppBar from 'material-ui/AppBar';
-
+//import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 class App extends Component {
   render() {
