@@ -4,7 +4,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
 const style = {
-  margin: "100px",
+  margin: "1000",
+  width: 900,
 };
 
 
@@ -13,16 +14,16 @@ const style = {
 class SearchBar extends Component {
 
 
-
 render(){
   return(
     <div>
     <Card style={style}>
-
-    <TextField hintText = "Search by name or location!" fullWidth={true}/>
+    <TextField hintText = "Search by name or location!"
+      fullWidth={false}
+      style={{width:800}}
+    />
     <RaisedButton>Search</RaisedButton>
     </Card>
-
     </div>
   )
 }
