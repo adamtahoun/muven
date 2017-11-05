@@ -1,0 +1,19 @@
+.SearchBar {
+
+  margin-top: 300px;
+  margin-left:  400px;
+
+}
+
+.SearchBar-card{
+  width: 900px;
+  padding: 10px;
+  /*padding: 10px*/
+  vertical-align: middle;
+
+}
+
+
+.SearchBar-input{
+
+}
