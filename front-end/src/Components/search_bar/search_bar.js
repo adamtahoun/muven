@@ -15,12 +15,15 @@ class SearchBar extends Component {
 render(){
   return(
     <div className="SearchBar">
+
     <Card className= "SearchBar-card">
+    <div style={{width:750}}>
     <TextField hintText = "Search by name or location!"
-      fullWidth={false}
+      fullWidth={true}
       className="SearchBar-input"
     />
-    <RaisedButton>Search</RaisedButton>
+    </div>
+    <RaisedButton className="SearchBar-button">Search</RaisedButton>
     </Card>
     </div>
   )
