@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import NavBar from './Components/nav_bar/nav_bar';
 import SearchBar from './Components/search_bar/search_bar';
-import "./App.css"
+import "./App.css";
 
 
 class App extends Component {
@@ -10,10 +10,14 @@ class App extends Component {
     return (
       <div className="App">
         <MuiThemeProvider>
+			<div>
           <NavBar/>
           <h2>Muven</h2>
           <h5>Booking and Networking Apllication <br/> for Musicians and Venues</h5>
+		  <center>
           <SearchBar />
+		  </center>
+		  </div>
         </MuiThemeProvider>
       </div>
     );
