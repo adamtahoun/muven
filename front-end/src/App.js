@@ -12,9 +12,9 @@ class App extends Component {
         <MuiThemeProvider>
 			<div>
           <NavBar/>
+           <center>
           <h2>Muven</h2>
           <h5>Booking and Networking Apllication <br/> for Musicians and Venues</h5>
-		  <center>
           <SearchBar />
 		  </center>
 		  </div>
