@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, CardActions } from 'material-ui/Card';
 import {Link} from 'react-router-dom';
-
+import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -12,6 +12,44 @@ import "../App.css"
 
 
 class LoginForm extends Component{
+	
+	handleClick(event){
+ var apiBaseUrl = "http://localhost:4000/api/";
+ var self = this;
+ var payload={
+ "email":this.state.username,
+ "password":this.state.password
+ }
+ axios.post(apiBaseUrl+'login', payload)
+ .then(function (response) {
+ console.log(response);
+ if(response.data.code == 200){
+ console.log("Login successfull");
+/*  var uploadScreen=[];
+ uploadScreen.push(<UploadScreen appContext={self.props.appContext}/>)
+ self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen}) */
+ }
+ else if(response.data.code == 204){
+ console.log("Username password do not match");
+ alert("username password do not match")
+ }
+ else{
+ console.log("Username does not exists");
+ alert("Username does not exist");
+ }
+ })
+ .catch(function (error) {
+ console.log(error);
+ });
+ }
+	
+   constructor(props){
+  super(props);
+  this.state={
+  username:'',
+  password:''
+  }
+ }
   render(){
     return(
 		<div className = "Login">
@@ -30,18 +68,21 @@ class LoginForm extends Component{
 						<TextField
 						hintText="Enter your Username"
 						floatingLabelText="Username"
+						onChange = {(event,newValue) => this.setState({username:newValue})}
 						/>
 						<br />
 						<TextField
 						hintText="Password Field"
 						floatingLabelText="Password"
 						type="password"
+						onChange = {(event,newValue) => this.setState({password:newValue})}
 						/>
 					</div>
 					<br/>
 					<br/><br/>
 					<CardActions>
-					<RaisedButton label ="Login"/>
+					<RaisedButton label ="Login"
+					onClick={(event) => this.handleClick(event)} />
 					<Link to="./signup">
     <RaisedButton label = "Need an account?" primary = {true} />
   </Link>
