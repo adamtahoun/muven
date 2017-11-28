@@ -15,15 +15,15 @@ class LoginForm extends Component{
   render(){
     return(
 		<div className = "Login">
-			<MuiThemeProvider> 
+			<MuiThemeProvider>
 				<div>
 					<NavBar/>
 					<br/>
 					<br/>
 					<br/>
-					
+
 					<center>
-					
+
 					<h1> Log in to your Artist or Venue account!</h1>
 					<Card className = "LoginCard">
 					<div>
@@ -49,9 +49,9 @@ class LoginForm extends Component{
 					</Card>
 					</center>
 				</div>
-			</MuiThemeProvider> 
+			</MuiThemeProvider>
 		</div>
-	 
+
     );
   }
 }

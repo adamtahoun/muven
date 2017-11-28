@@ -8,9 +8,13 @@ const buttonStyle = {
     margin: 14,
 };
 
+
 const NavBar = () => (
   <div className="NavBar">
   <nav>
+  <Link to='./'>
+    <FlatButton label = "Home" primary = {true} style = {buttonStyle}/>
+  </Link>
   <Link to="./login">
     <FlatButton label = "Login" primary = {true} style = {buttonStyle}/>
   </Link>
