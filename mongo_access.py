@@ -1,6 +1,10 @@
 
 from werkzeug import generate_password_hash
 
+import requests
+import os
+import json
+
 from flask import Flask
 from flask import jsonify
 from flask import request
@@ -17,7 +21,7 @@ mongo = PyMongo(app)
 
 app.secret_key = "muven4-key"
 
-@app.route('/signup', methods=['POST'])
+@app.route('/api/signup', methods=['POST'])
 def sign up():
     if request.method == "POST":
         if 'artist' in session:
@@ -44,7 +48,7 @@ def sign up():
             return 0 //successfully registered
     return 3 //nothing posted
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     if request.method == "POST":
         artist = mongo.db.artist
@@ -61,6 +65,22 @@ def login():
         
     return 3 //nothing posted
     
+@app.route('/api/search', methods=['POST'])
+def login():
+    if request.method == "POST":
+        artist = mongo.db.artist
+        venue = mondo.db.venue
+        email = request.form['email']
+        pwdhash  = generate_password_hash(request.form['password'])
+        
+        if venue.find_one({"email": email, "password": pwdhash}) != None:
+            return 0 //logged in as a venue
+        elif artist.find_one({"email": email, "password": pwdhash}) != None:
+            return 1 //logged in as an artist
+        else
+            return 2 //no matches
+        
+    return 3 //nothing posted
 
     
     
