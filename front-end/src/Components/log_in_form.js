@@ -12,14 +12,14 @@ import "../App.css"
 
 
 class LoginForm extends Component{
-	
-	handleClick(event){
- var apiBaseUrl = "http://localhost:4000/api/";
- var self = this;
- var payload={
- "email":this.state.username,
- "password":this.state.password
- }
+
+handleClick(event){
+	var apiBaseUrl = "http://localhost:4000/api/";
+	var self = this;
+	var payload={
+	 "username":this.state.username,
+	 "password":this.state.password
+ 	}
  axios.post(apiBaseUrl+'login', payload)
  .then(function (response) {
  console.log(response);
@@ -42,7 +42,7 @@ class LoginForm extends Component{
  console.log(error);
  });
  }
-	
+
    constructor(props){
   super(props);
   this.state={
