@@ -14,9 +14,9 @@ import "../App.css"
     margin: 8,
 };
 class SignupForm extends Component{
-	
+
 handleClick(event){
-    var apiBaseUrl = "http://localhost:3001";
+    var apiBaseUrl = "http://localhost:5000";
     console.log("values",this.state.first_name,this.state.email,this.state.password,this.state.confirm);
     //To be done:check for empty values before hitting submit
     var self = this;
@@ -54,19 +54,19 @@ handleClick(event){
       password:'',
 	  confirm:''
 	  }}
-	
+
   render(){
     return(
 		<div className = "Login">
-			<MuiThemeProvider> 
+			<MuiThemeProvider>
 				<div>
 					<NavBar/>
 					<br/>
 					<br/>
 					<br/>
-					
+
 					<center>
-					
+
 					<h1>Create a new Artist or Venue account!</h1>
 					<Card className = "LoginCard">
 					<div>
@@ -80,7 +80,7 @@ handleClick(event){
 						hintText="Enter an Email"
 						floatingLabelText="Email"
 						onChange = {(event,newValue) => this.setState({email:newValue})}
-						
+
 						/>
 						<br />
 						<TextField
@@ -98,7 +98,7 @@ handleClick(event){
 						/>
 					</div>
 					<br/>
-					
+
 					<CardActions>
 					<RaisedButton label ="Sign Up!" primary = {true} style= {buttonStyle} onClick={(event) => this.handleClick(event)}/>
 					<br/>
@@ -109,9 +109,9 @@ handleClick(event){
 					</Card>
 					</center>
 				</div>
-			</MuiThemeProvider> 
+			</MuiThemeProvider>
 		</div>
-	 
+
     );
   }
 }

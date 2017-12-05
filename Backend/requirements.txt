@@ -1,0 +1,15 @@
+
+anaconda-client
+
+cryptography==1.7.1
+
+
+Flask==0.12.2
+Flask-Cors==3.0.3
+Flask-PyMongo==0.5.1
+
+Flask-WTF==0.14.2
+
+
+xlwt==1.2.0
+xmltodict==0.9.0
