@@ -24,9 +24,7 @@ const style = {
 
 const buttonStyle = {
   margin: 8,
-  position:
-};3
-
+};
 
 class EditProfile extends Component{
 
