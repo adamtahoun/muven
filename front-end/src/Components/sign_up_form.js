@@ -49,10 +49,14 @@ handleClick(event){
 
 }
 
-
+// {this.s}
   render(){
 		if (this.state.redirect) {
-				return <Redirect push to="/edit" />;
+				console.log(this.state.first_name);
+				return <Redirect to={{
+					pathname: '/edit',
+					state: {username: this.state.first_name}
+				}}/>;
 		}
     return(
 		<div className = "Login">

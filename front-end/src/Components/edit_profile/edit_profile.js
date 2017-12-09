@@ -30,6 +30,7 @@ class EditProfile extends Component{
 
   constructor(props) {
    super(props);
+   console.log(this.props);
    this.state = {
      value: 'artist',
      artist_name: '',
@@ -48,6 +49,7 @@ class EditProfile extends Component{
      venue_about:''
    };
    console.log(this.state);
+  
  };
 
  handleChange = (value) => {
