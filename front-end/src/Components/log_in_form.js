@@ -14,13 +14,13 @@ import "../App.css"
 class LoginForm extends Component{
 
 handleClick(event){
-	var apiBaseUrl = "http://localhost:4000/api/";
+	var apiBaseUrl = "http://localhost:5000";
 	var self = this;
 	var payload={
 	 "username":this.state.username,
 	 "password":this.state.password
  	}
- axios.post(apiBaseUrl+'login', payload)
+ axios.post(apiBaseUrl+'/login', payload)
  .then(function (response) {
  console.log(response);
  if(response.data.code == 200){

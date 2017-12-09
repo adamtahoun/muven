@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardActions } from 'material-ui/Card';
-import {Link} from 'react-router-dom';
+import {Link,  Redirect} from 'react-router-dom';
 import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -14,12 +14,21 @@ import "../App.css"
     margin: 8,
 };
 class SignupForm extends Component{
-	
+
+	constructor(props){
+		super(props);
+		this.state={
+			first_name:'',
+			email:'',
+			password:'',
+			confirm:'',
+			redirect: false,
+		}
+		this.handleClick = this.handleClick.bind(this);
+	}
+
 handleClick(event){
-    var apiBaseUrl = "http://localhost:3001";
-    console.log("values",this.state.first_name,this.state.email,this.state.password,this.state.confirm);
-    //To be done:check for empty values before hitting submit
-    var self = this;
+    var apiBaseUrl = "http://localhost:5000";
     var payload={
     "first_name": this.state.first_name,
     "email":this.state.email,
@@ -27,46 +36,35 @@ handleClick(event){
     "confirm":this.state.confirm
     }
     axios.post(apiBaseUrl+'/signup', payload)
-   .then(function (response) {
+   .then( (response) => {
      console.log(response);
-     if(response.data.code == 200){
+     if(response.status == 200){
        console.log("registration successfull");
-      /*  var loginscreen=[];
-       loginscreen.push(<Login parentContext={this}/>);
-       var loginmessage = "Not Registered yet.Go to registration";
-       self.props.parentContext.setState({loginscreen:loginscreen,
-       loginmessage:loginmessage,
-       buttonLabel:"Register",
-       isLogin:true */
-      //  });
+			 this.setState({redirect: true});
      }
    })
-   .catch(function (error) {
+   .catch((error) => {
      console.log(error);
    });
 
 }
-	  constructor(props){
-    super(props);
-    this.state={
-      first_name:'',
-      email:'',
-      password:'',
-	  confirm:''
-	  }}
-	
+
+
   render(){
+		if (this.state.redirect) {
+				return <Redirect push to="/edit" />;
+		}
     return(
 		<div className = "Login">
-			<MuiThemeProvider> 
+			<MuiThemeProvider>
 				<div>
 					<NavBar/>
 					<br/>
 					<br/>
 					<br/>
-					
+
 					<center>
-					
+
 					<h1>Create a new Artist or Venue account!</h1>
 					<Card className = "LoginCard">
 					<div>
@@ -80,7 +78,7 @@ handleClick(event){
 						hintText="Enter an Email"
 						floatingLabelText="Email"
 						onChange = {(event,newValue) => this.setState({email:newValue})}
-						
+
 						/>
 						<br />
 						<TextField
@@ -98,7 +96,7 @@ handleClick(event){
 						/>
 					</div>
 					<br/>
-					
+
 					<CardActions>
 					<RaisedButton label ="Sign Up!" primary = {true} style= {buttonStyle} onClick={(event) => this.handleClick(event)}/>
 					<br/>
@@ -109,9 +107,9 @@ handleClick(event){
 					</Card>
 					</center>
 				</div>
-			</MuiThemeProvider> 
+			</MuiThemeProvider>
 		</div>
-	 
+
     );
   }
 }
