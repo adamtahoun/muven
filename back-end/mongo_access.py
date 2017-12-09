@@ -48,21 +48,39 @@ def search():
     #user collection 
     user = mongo.db.user 
     
-    if request.method == "POST":
-    
-        if "username" in data:
-            search = { username : data.get('username')}
-            
-        if "city" in data:
-            search = { city : data.get('city'),
-                       state : data.get('state')}
-        
-        #gets all users that match search criteria
-        resusts = user.find(search)
-        
-        #to add, how to return user list
-        
-        return 400
+    #checks if axious posted
+    if request.method == "POST":        
+        #get data from axios?
+        search = data.get('search')
+        search_params = search.split(" ")
+        if "artist" in search_params:
+            type = "artist"
+            both = 0
+            search_params.remove("artist")
+        elif "venue" in search_params:
+            type = "venue"
+            both = 0
+            search_params.remove("venue")
+        else:
+            both = 1
+
+        #query results
+        temp = []
+        result = []
+        for x in search_params:
+            if both == 0:
+                query = user.find( {'$and': [ {'type': type}, { '$or': [ {'username': x},  {'city': x}, {'state': x}]}]})
+                for j in query:
+                    temp.append(j)
+            else:
+                query = user.find( {'$or': [ {'username': x},  {'city': x}, {'state': x} ] } )
+                for j in query:
+                    temp.append(j)
+
+        for e in temp:
+            e['_id'] = str(e['_id'])
+            result.append(e)
+        return jsonify(result)
         
     return 400
         
