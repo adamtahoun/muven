@@ -28,7 +28,12 @@ app.secret_key = "muven4-key"
 
 @app.route('/', methods=['GET'])
 def hello():
-    return "I'm sure"
+    return "testing get results"
+
+@app.route('/profile', methods=['POST','GET'))
+def profile():
+    data = request.get_json(silent=True)
+    if request.method == "POST":
 
 
 @app.route('/signup', methods=['POST','GET'])
