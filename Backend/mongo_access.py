@@ -30,10 +30,43 @@ app.secret_key = "muven4-key"
 def hello():
     return "testing get results"
 
-@app.route('/profile', methods=['POST','GET'))
+@app.route('/profile', methods=['POST','GET'])
 def profile():
+    #gets the data from the post
     data = request.get_json(silent=True)
+    
+    #user collection 
+    user = mongo.db.user 
+    
+    #checks if axious posted
     if request.method == "POST":
+        #gets the individual bits of data from the post
+        type = data.get('value')
+        name = data.get('name')
+        address = data.get('address')
+        city = data.get('city')
+        state = data.get('state')
+        genre = data.get('genre')
+        about = data.get('about')
+        
+        #what parts of a record to update
+        update_record = {"type": type,
+                       "address": address,
+                       "city" : city,
+                       "state": state,
+                       "genre": genre,
+                       "about": about }
+        
+        #updates the document
+        result = user.update_one({'username':name}, {"$set": update_record}, upsert=False)
+        #tests to see if update occurred
+        if result.matched_count:
+            return "200"
+        
+        #update failed
+        return "400"
+    #update failed
+    return "400"
 
 
 @app.route('/signup', methods=['POST','GET'])
