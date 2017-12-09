@@ -21,13 +21,10 @@ handleClick(event){
 	 "password":this.state.password
  	}
  axios.post(apiBaseUrl+'/login', payload)
- .then(function (response) {
+ .then( (response) => {
  console.log(response);
  if(response.data.code == 200){
- console.log("Login successfull");
-/*  var uploadScreen=[];
- uploadScreen.push(<UploadScreen appContext={self.props.appContext}/>)
- self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen}) */
+ 	console.log("Login successfull");
  }
  else if(response.data.code == 204){
  console.log("Username password do not match");
