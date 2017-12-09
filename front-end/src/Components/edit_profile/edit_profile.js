@@ -66,6 +66,8 @@ class EditProfile extends Component{
       <div className="EditProfile">
         <MuiThemeProvider>
           <NavBar/>
+          <center>
+        <h1> Edit your profile!</h1>
           <Card className="EditProfileCard">
           <Tabs
             value={this.state.value}
@@ -172,8 +174,12 @@ class EditProfile extends Component{
           </Paper>
             </Tab>
           </Tabs>
+            <Link to="./profile">
+              <RaisedButton label ="Cancel" primary = {true} style= {buttonStyle} onClick={(event) => this.handleClick(event)}/>
+            </Link>
             <RaisedButton label ="Submit" primary = {true} style= {buttonStyle} onClick={(event) => this.handleClick(event)}/>
          </Card>
+         </center>
         </MuiThemeProvider>
       </div>
     )
