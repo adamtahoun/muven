@@ -40,31 +40,68 @@ def profile():
     
     #checks if axious posted
     if request.method == "POST":
-        #gets the individual bits of data from the post
-        type = data.get('value')
-        name = data.get('name')
-        address = data.get('address')
-        city = data.get('city')
-        state = data.get('state')
-        genre = data.get('genre')
-        about = data.get('about')
+
+        if data.get('type') == 'artist':
+            #gets the individual bits of data from the post
+            type = data.get('type')
+            name = data.get('name')
+            address = data.get('address')
+            city = data.get('city')
+            state = data.get('state')
+            genre = data.get('genre')
+            about = data.get('about')
+            bookings = []
         
-        #what parts of a record to update
-        update_record = {"type": type,
-                       "address": address,
-                       "city" : city,
-                       "state": state,
-                       "genre": genre,
-                       "about": about }
+            #what parts of a record to update
+            update_record = {"type": type,
+                             "address": address,
+                             "city" : city,
+                             "state": state,
+                             "genre": genre,
+                             "about": about,
+                             "bookings": bookings}
         
-        #updates the document
-        result = user.update_one({'username':name}, {"$set": update_record}, upsert=False)
-        #tests to see if update occurred
-        if result.matched_count:
-            return "200"
+            #updates the document
+            result = user.update_one({'username':name}, {"$set": update_record}, upsert=False)
+            #tests to see if update occurred
+            if result.matched_count:
+                return "200"
         
-        #update failed
-        return "400"
+            #update failed
+            return "400"
+
+        if data.get('type') == 'venue':
+            #gets the individual bits of data from the post
+            type = data.get('type')
+            name = data.get('name')
+            address = data.get('address')
+            city = data.get('city')
+            state = data.get('state')
+            genre = data.get('genre')
+            about = data.get('about')
+            capacity = data.get('capacity')
+            max_bands = data.get('max_bands')
+            bookings = []
+        
+            #what parts of a record to update
+            update_record = {"type": type,
+                             "address": address,
+                             "city" : city,
+                             "state": state,
+                             "genre": genre,
+                             "about": about,
+                             "capacity": capacity,
+                             "max_bands": max_bands,
+                             "bookings": bookings}
+        
+            #updates the document
+            result = user.update_one({'username':name}, {"$set": update_record}, upsert=False)
+            #tests to see if update occurred
+            if result.matched_count:
+                return "200"
+        
+            #update failed
+            return "400"
     #update failed
     return "400"
 
