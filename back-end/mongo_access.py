@@ -30,6 +30,44 @@ app.secret_key = "muven4-key"
 def hello():
     return "testing get results"
 
+#to be programmed request booking
+@app.route('/request', methods=['POST','GET'])
+def request_booking():
+    #get the data for search criteria
+    data = request.get_json(silent=True)
+    
+    #user collection 
+    user = mongo.db.user 
+
+#to be programmed search backend
+@app.route('/search', methods=['POST','GET'])
+def search():
+    #get the data for search criteria
+    data = request.get_json(silent=True)
+    
+    #user collection 
+    user = mongo.db.user 
+    
+    if request.method == "POST":
+    
+        if "username" in data:
+            search = { username : data.get('username')}
+            
+        if "city" in data:
+            search = { city : data.get('city'),
+                       state : data.get('state')}
+        
+        #gets all users that match search criteria
+        resusts = user.find(search)
+        
+        #to add, how to return user list
+        
+        return 400
+        
+    return 400
+        
+    
+
 @app.route('/profile', methods=['POST','GET'])
 def profile():
     #gets the data from the post
