@@ -5,7 +5,7 @@ import requests
 import os
 import json
 import pymongo
-import datetime
+from datetime import datetime
 from pymongo import MongoClient
 
 from flask import Flask
@@ -76,22 +76,9 @@ def accept_booking():
         bookee = data.get('bookee')
         date = data.get('date')
         
-        #validate date
         
-        #getting current date
-        now = datetime.datetime.now()
-        today = now.strftime("%m/%d/%y" )
         
-        #getting booking date
-        book_date =datetime.strptime(date, '%m/%d/%y')
         
-        #booking more than 6 months in advance
-        if (book_date - today).days >180: 
-            return "401"
-        
-        #ensure that the booking date is in the future
-        if (book_date - today).days < 1: 
-            return "402"
         
         
         #update the request to accepted
@@ -128,19 +115,33 @@ def request_booking():
                        "bookee": bookee,
                        "date" : date,
                        "request" : 0  }
+        #validate date
         
+        #getting current date
+        today = datetime.now()
+        
+        #getting booking date
+        book_date = datetime.strptime(date, '%m/%d/%y')
+        
+        #booking more than 6 months in advance
+        if (book_date - today).days >180: 
+            return "401"
+        
+        #ensure that the booking date is in the future
+        if (book_date - today).days < 1: 
+            return "402"
         
         #ensures date is not already booked
         if( (booking.find_one({"booker": booker, "date": date}) == None) and (booking.find_one({"bookee": bookee, "date": date}) == None) ):
             booking.insert_one(booking_record)
             return "200"
         else:
-            return "401"
-        return "400"
+            return "400"
+        return "500"
     
     
     
-    return "409" #for now returns true
+    return "500" #for now returns true
 
 #to be programmed search backend
 @app.route('/search', methods=['POST','GET'])
@@ -185,7 +186,7 @@ def search():
             result.append(e)
         return jsonify(result)
         
-    return "400"
+    return "500"
         
     
 
@@ -262,7 +263,7 @@ def profile():
             #update failed
             return "400"
     #update failed
-    return "400"
+    return "500"
 
 
 @app.route('/signup', methods=['POST','GET'])
@@ -273,15 +274,15 @@ def sign_up():
         user = mongo.db.user #user collection until artist/venue functionality added
         
         #verify that data has been entered
-        if data.get('first_name') == "" or data.get('email') == "" or data.get('password') == "" or data.get('confirm') == "":
+        if data.get('first_name').strip() == "" or data.get('email').strip() == "" or data.get('password').strip() == "" or data.get('confirm').strip() == "":
             return "402"
         
         #gather data
-        name = data.get('first_name')
-        email = data.get('email')
+        name = data.get('first_name').strip()
+        email = data.get('email').strip()
         #verify that passwords match and encrypt the password
-        if (data.get('password') == data.get('confirm')): 
-            pwdhash = data.get('password') #generate_password_hash(data.get('password'))
+        if (data.get('password').strip() == data.get('confirm').strip()): 
+            pwdhash = data.get('password').strip() #generate_password_hash(data.get('password'))
         else:
             return "404"
         
@@ -303,7 +304,7 @@ def sign_up():
             user.insert_one(user_record)
             return "200" #successfully registered
         
-    return "400" #nothing posted
+    return "500" #nothing posted
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -313,12 +314,12 @@ def login():
         user = mongo.db.user #user collection until artist/venue functionality added
         
         #validates entered fields
-        if data.get('username') == "" or data.get('password') == "" :
+        if data.get('username').strip() == "" or data.get('password').strip() == "" :
             return "402"
         
         #get data from axios?
-        username = data.get('username')
-        pwdhash  = data.get('password')#generate_password_hash(data.get('password'))
+        username = data.get('username').strip()
+        pwdhash  = data.get('password').strip()#generate_password_hash(data.get('password'))
     
         
 
@@ -332,7 +333,7 @@ def login():
         
         return "400" #nothing posted -must enter username and password-
     
-    return "404" #nothing posted
+    return "500" #nothing posted
     
 
     
