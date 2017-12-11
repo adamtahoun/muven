@@ -28,9 +28,17 @@ class Profile extends Component{
       bio: 'Between the Buried and Me is an American progressive metal band from Raleigh, North Carolina. Formed in 2000, the band consists of Tommy Giles Rogers, Jr. (lead vocals, keyboards), Paul Waggoner (guitars, backing vocals), Dustie Waring (guitars), Dan Briggs (bass, keyboards), and Blake Richardson (drums).',
       upcomingShows: [{showName:"first show"},
       {showName:"second show"},
-      {showName:"third show"}]
+      {showName:"third show"}],
+
+      dateSelected: null,
+      eventName:'',
+      venueName:'',
+      locationName:'',
+
+
 
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleOpen = () => {
@@ -41,16 +49,44 @@ class Profile extends Component{
     this.setState({open : false});
   };
 
+  handleClick(event){
+    var apiBaseUrl = "http://localhost:5000";
+    var payload={
+    "date": this.state.dateSelected,
+    "event":this.state.eventName,
+    "venue":this.state.venueName,
+    "location":this.state.locationName
+    }
+    axios.post(apiBaseUrl+'/profile', payload)
+   .then( (response) => {
+     console.log(response);
+     if(response.status == 200){
+       console.log("booking successfull");
+			 this.setState({redirect: true});
+     }
+   })
+   .catch((error) => {
+     console.log(error);
+   });
+
+}
+
 
 
   render(){
     const actions = [
     <FlatButton
-      label="Ok"
+      label="Cancel"
       primary={true}
       keyboardFocused={true}
       onClick={this.handleClose}
     />,
+    <FlatButton
+      label="Book"
+      primary={true}
+      keyboardFocused={true}
+      onClick={(event) => this.handleClick(event)}
+    />
   ];
 
 
@@ -78,7 +114,7 @@ class Profile extends Component{
     <Col xs={6} md={5} offset={{md:1}}>
     <center>
     <h3 style={{fontSize : 44}}>{this.state.bandName}</h3>
-    <i>Raleigh, North Carolina</i>
+    <i>{this.state.location}</i>
     </center>
     <p>{this.state.bio}</p>
     </Col>
@@ -104,13 +140,31 @@ class Profile extends Component{
       label = "Request a Booking"
     />
     <Dialog
-      title = "Pick a date for the booking!"
+      title = {"Fill out this form to book "+this.state.bandName}
       actions = {actions}
       modal = {false}
       open = {this.state.open}
       onRequestClose = {this.handleClose}>
-      open a date picker dialong from within this dialog
-      <DatePicker hintText = "Pick a date" />
+
+      <DatePicker hintText = "Pick a date"
+      onChange = {(event, newValue) => this.setState({dateSelected:newValue})}
+      />
+      <TextField
+     hintText = "Event Name"
+     floatingLabelText="What's the event name?"
+     onChange = {(event, newValue) => this.setState({eventName:newValue})}
+   />
+      <br/>
+      <TextField
+           hintText = "Venue Name"
+           floatingLabelText="Which venue is it at?"
+           onChange = {(event, newValue) => this.setState({venueName:newValue})}
+         />      <br/>
+         <TextField
+              hintText = "Venue Location"
+              floatingLabelText="Where is it located?"
+              onChange = {(event, newValue) => this.setState({locationName:newValue})}
+            />      <br/>
       </Dialog>
     </center>
     </Col>
