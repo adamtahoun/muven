@@ -55,7 +55,7 @@ def request_booking():
         
         
         #ensures date is not already booked
-        if( (booking.find_one({"booker": booker, "date": date}) == None) && (booking.find_one({"bookee": bookee, "date": date}) == None) ):
+        if( (booking.find_one({"booker": booker, "date": date}) == None) and (booking.find_one({"bookee": bookee, "date": date}) == None) ):
             booking.insert_one(booking_record)
             return "200"
         return "400"
