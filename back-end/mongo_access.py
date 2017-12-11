@@ -5,6 +5,7 @@ import requests
 import os
 import json
 import pymongo
+import datetime
 from pymongo import MongoClient
 
 from flask import Flask
@@ -75,6 +76,24 @@ def accept_booking():
         bookee = data.get('bookee')
         date = data.get('date')
         
+        #validate date
+        
+        #getting current date
+        now = datetime.datetime.now()
+        today = now.strftime("%m/%d/%y" )
+        
+        #getting booking date
+        book_date =datetime.strptime(date, '%m/%d/%y')
+        
+        #booking more than 6 months in advance
+        if (book_date - today).days >180: 
+            return "401"
+        
+        #ensure that the booking date is in the future
+        if (book_date - today).days < 1: 
+            return "402"
+        
+        
         #update the request to accepted
         result = booking.update_one({"booker": booker, "date" : date}, {"$set": {"request": 1}}, upsert=False)
     
@@ -115,6 +134,8 @@ def request_booking():
         if( (booking.find_one({"booker": booker, "date": date}) == None) and (booking.find_one({"bookee": bookee, "date": date}) == None) ):
             booking.insert_one(booking_record)
             return "200"
+        else:
+            return "401"
         return "400"
     
     
@@ -248,11 +269,12 @@ def profile():
 def sign_up():
     data = request.get_json(silent=True)
     if request.method == "POST":
-        #if 'artist' in data:
-        #    user = mongo.db.artist
-        #if 'venue' in data:
-        #    user = mongo.db.venue
+                
         user = mongo.db.user #user collection until artist/venue functionality added
+        
+        #verify that data has been entered
+        if data.get('first_name') == "" or data.get('email') == "" or data.get('password') == "" or data.get('confirm') == "":
+            return "402"
         
         #gather data
         name = data.get('first_name')
@@ -260,18 +282,23 @@ def sign_up():
         #verify that passwords match and encrypt the password
         if (data.get('password') == data.get('confirm')): 
             pwdhash = data.get('password') #generate_password_hash(data.get('password'))
+        else
+            return "404"
         
         #user record to be stored
         user_record = {"username": name,
                        "email": email,
                        "password" : pwdhash   }
         
+        
+
+        
         #if the email is already in use
         if user.find_one({"email": email}):
-            return "409" 
+            return "408" 
         #if the username is already in use
         elif user.find_one({"username": name}) :
-            return "406" #username already in use error
+            return "407" #username already in use error
         else:
             user.insert_one(user_record)
             return "200" #successfully registered
@@ -282,25 +309,26 @@ def sign_up():
 def login():
     if request.method == "POST":
         data = request.get_json(silent=True)
-        #artist = mongo.db.artist
-        #venue = mondo.db.venue
+        
         user = mongo.db.user #user collection until artist/venue functionality added
+        
+        #validates entered fields
+        if data.get('username') == "" or data.get('password') == "" :
+            return "402"
         
         #get data from axios?
         username = data.get('username')
         pwdhash  = data.get('password')#generate_password_hash(data.get('password'))
+    
         
-        #This would check both collections for the username/password combo
-        #if venue.find_one({"email": email, "password": pwdhash}) != None:
-        #    return 200 #logged in as a venue
-        #elif artist.find_one({"email": email, "password": pwdhash}) != None:
-        #    return 200 #logged in as an artist
+
         
         #if username and password find no match
         if(user.find_one({"username": username, "password": pwdhash}) != None):
-            return "204"
-        elif(user.find_one({"username": username}) != None):
-            return "0" #no matches
+            return "200"
+        #wrong password
+        elif(user.find_one({"username": username}) != None): 
+            return "401" #no matches
         
         return "400" #nothing posted -must enter username and password-
     
