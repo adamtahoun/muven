@@ -39,6 +39,22 @@ def accept_booking():
     #user collection 
     booking = mongo.db.bookreq
     
+    if request.method == "POST":
+        
+        #gets posted data
+        booker = data.get('booker')
+        bookee = data.get('bookee')
+        date = data.get('date')
+        
+        result = booking.update_one({"booker": booker, "date" : date}, {"$set": {"request": 1}}, upsert=False)
+    
+        if result.matched_count:
+                return "200"
+        
+        #update failed
+        return "400"
+    
+    return "400"
 
 #request booking functionality
 @app.route('/request', methods=['POST','GET'])
