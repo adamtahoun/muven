@@ -30,7 +30,17 @@ app.secret_key = "muven4-key"
 def hello():
     return "testing get results"
 
-#to be programmed request bookingtytt432
+#accept a booking request in progress
+@app.route('/accept',  methods=['POST','GET'] )
+def accept_booking():
+    #get the data for search criteria
+    data = request.get_json(silent=True)
+    
+    #user collection 
+    booking = mongo.db.bookreq
+    
+
+#request booking functionality
 @app.route('/request', methods=['POST','GET'])
 def request_booking():
     #get the data for search criteria
