@@ -282,7 +282,7 @@ def sign_up():
         #verify that passwords match and encrypt the password
         if (data.get('password') == data.get('confirm')): 
             pwdhash = data.get('password') #generate_password_hash(data.get('password'))
-        else
+        else:
             return "404"
         
         #user record to be stored
