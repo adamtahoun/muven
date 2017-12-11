@@ -30,14 +30,39 @@ app.secret_key = "muven4-key"
 def hello():
     return "testing get results"
 
-#to be programmed request booking
+#to be programmed request bookingtytt432
 @app.route('/request', methods=['POST','GET'])
 def request_booking():
     #get the data for search criteria
     data = request.get_json(silent=True)
     
     #user collection 
-    user = mongo.db.user 
+    booking = mongo.db.bookreq
+    
+    
+    if request.method == "POST":
+        
+        #gets posted data
+        booker = data.get('booker')
+        bookee = data.get('bookee')
+        date = data.get('date')
+        
+        #record to be inserted
+        booking_record = {"booker": booker,
+                       "bookee": bookee,
+                       "date" : date,
+                       "request" : 0  }
+        
+        
+        #ensures date is not already booked
+        if( (booking.find_one({"booker": booker, "date": date}) == None) && (booking.find_one({"bookee": bookee, "date": date}) == None) ):
+            booking.insert_one(booking_record)
+            return "200"
+        return "400"
+    
+    
+    
+    return "409" #for now returns true
 
 #to be programmed search backend
 @app.route('/search', methods=['POST','GET'])
@@ -82,7 +107,7 @@ def search():
             result.append(e)
         return jsonify(result)
         
-    return 400
+    return "400"
         
     
 
