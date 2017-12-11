@@ -31,8 +31,35 @@ def hello():
     return "testing get results"
 
 
+#reject a booking request
+@app.route('/reject',  methods=['POST','GET'] )
+def reject_booking():
+    #get the data for search criteria
+    data = request.get_json(silent=True)
+    
+    #user collection 
+    booking = mongo.db.bookreq
+    
+    if request.method == "POST":
+        
+        #gets posted data
+        booker = data.get('booker')
+        bookee = data.get('bookee')
+        date = data.get('date')
+        
+        #update the request so that the request is set to -1
+        result = booking.update_one({"booker": booker, "date" : date}, {"$set": {"request": -1}}, upsert=False)
+    
+        #if the change was made
+        if result.matched_count:
+                return "200"
+        
+        #update failed
+        return "400"
+    
+    return "400"
 
-#accept a booking request in progress
+#accept a booking request
 @app.route('/accept',  methods=['POST','GET'] )
 def accept_booking():
     #get the data for search criteria
@@ -48,8 +75,10 @@ def accept_booking():
         bookee = data.get('bookee')
         date = data.get('date')
         
+        #update the request to accepted
         result = booking.update_one({"booker": booker, "date" : date}, {"$set": {"request": 1}}, upsert=False)
     
+        #if not accepted
         if result.matched_count:
                 return "200"
         
@@ -60,7 +89,7 @@ def accept_booking():
 
 #request booking functionality
 @app.route('/request', methods=['POST','GET'])
-def request():
+def request_booking():
     #get the data for search criteria
     data = request.get_json(silent=True)
     
