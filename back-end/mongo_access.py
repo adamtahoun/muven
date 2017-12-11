@@ -30,6 +30,8 @@ app.secret_key = "muven4-key"
 def hello():
     return "testing get results"
 
+
+
 #accept a booking request in progress
 @app.route('/accept',  methods=['POST','GET'] )
 def accept_booking():
@@ -58,7 +60,7 @@ def accept_booking():
 
 #request booking functionality
 @app.route('/request', methods=['POST','GET'])
-def request_booking():
+def request():
     #get the data for search criteria
     data = request.get_json(silent=True)
     
