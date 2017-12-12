@@ -53,7 +53,7 @@ class LoginForm extends Component {
         <Redirect
           to={{
             pathname: "/profile",
-            state: { username: this.state.username}
+            state: { name: "Arctic Monkeys"}
           }}
         />
       );

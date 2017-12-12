@@ -216,6 +216,15 @@ class EditProfile extends Component {
                     />
                     <Divider />
                     <TextField
+                      hintText="State"
+                      style={style}
+                      underlineShow={false}
+                      onChange={(event, newValue) =>
+                        this.setState({ venue_state: newValue })
+                      }
+                    />
+                    <Divider />
+                    <TextField
                       hintText="Capacity"
                       style={style}
                       underlineShow={false}

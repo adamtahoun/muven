@@ -14,45 +14,56 @@ import FlatButton from 'material-ui/FlatButton';
 
 
 
-import pic from './images/btbam.jpg';
+import pic1 from './images/artist.jpg';
+import pic2 from './images/venue.jpg';
 
 class Profile extends Component{
 
   constructor(props){
     super(props);
-    console.log(props);
-    this.state = {
-      open: false,
-      name : this.props.location.state.name,
-      location : 'Raleigh, North Carolina',
-      bio: 'Between the Buried and Me is an American progressive metal band from Raleigh, North Carolina. Formed in 2000, the band consists of Tommy Giles Rogers, Jr. (lead vocals, keyboards), Paul Waggoner (guitars, backing vocals), Dustie Waring (guitars), Dan Briggs (bass, keyboards), and Blake Richardson (drums).',
-      upcomingShows: [{showName:"first show"},
-      {showName:"second show"},
-      {showName:"third show"}],
+      this.state = {
+        open: false,
+        upcomingShows: [{showName:"Miami, FL"},
+        {showName:"Atlanta, GA"},
+        {showName:"NYC, NY"}],
+        dateSelected: '',
+        eventName:'',
+        artistName:'',
+      };
+    console.log(this.state)
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-      dateSelected: '',
-      eventName:'',
-      artistName:'',
-
-
-
-
-    };
+  componentDidMount() {
     var apiBaseUrl = "http://localhost:5000";
     axios.get(apiBaseUrl+'/profile', {
         params: {
           name: this.props.location.state.name
         }
       })
-      .then(function (response) {
+      .then(response => {
         console.log(response);
+        if(response.data.type == 'venue'){
+          this.setState({
+          type: false,
+          name: response.data.name,
+          capacity: response.data.capacity,
+          location: response.data.city + ', ' +  response.data.state,
+          bio: response.data.about
+        })
+      }
+      else{
+        this.setState({
+          type: true,
+        name: response.data.name,
+        location: response.data.city + ', ' +  response.data.state,
+        bio: response.data.about
       })
-      .catch(function (error) {
+      }
+      })
+      .catch(error => {
         console.log(error);
       });
-
-
-    this.handleClick = this.handleClick.bind(this);
   }
 
   handleOpen = () => {
@@ -91,7 +102,7 @@ class Profile extends Component{
 
 
   render(){
-
+    const isArtist = this.state.type;
     const actions = [
     <FlatButton
       label="Go back"
@@ -112,8 +123,7 @@ class Profile extends Component{
       <div>
           <MuiThemeProvider>
       <NavBar/>
-        <h2>PROFILE PAGE</h2>
-
+        {isArtist ? <h2>ARTIST</h2> : <h2>VENUE</h2>}
         <Container fluid style={{ lineHeight: '32px' }}>
   <Row>
     <Col xs={12} md={5}>
@@ -122,7 +132,7 @@ class Profile extends Component{
       <CardMedia
         overlay={<CardTitle title={this.state.name}subtitle={this.state.name} />}
       >
-        <img src={pic} alt="" />
+        {isArtist ? <img src={pic1} alt="" /> : <img src={pic2} alt="" /> }
       </CardMedia>
 
 
@@ -141,10 +151,10 @@ class Profile extends Component{
   <Row >
     <Col xs={6}  ><h3>Upcoming Shows</h3>
     <ul>
-    {this.state.upcomingShows.map((show)=>{
+    {this.state.upcomingShows.map((shows)=>{
       return (
         <li>
-        {show.showName}
+        {shows.showName}
         </li>
       )
     })}

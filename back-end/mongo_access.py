@@ -189,7 +189,7 @@ def request_booking():
 
             bke = user.find_one({"name": bookee})
             book_array = bke["bookings"]
-
+            booking_record['_id'] = str(booking_record['_id'])
             book_array.append(booking_record)
 
             update_record = {"bookings": book_array}
@@ -220,14 +220,14 @@ def search():
         #get data from axios?
         search = data.get('search')
         search_params = search.split(" ")
-        if "artist" in search_params:
+        if "artists" in search_params:
             type = "artist"
             both = 0
-            search_params.remove("artist")
-        elif "venue" in search_params:
+            search_params.remove("artists")
+        elif "venues" in search_params:
             type = "venue"
             both = 0
-            search_params.remove("venue")
+            search_params.remove("venues")
         else:
             both = 1
 
