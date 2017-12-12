@@ -81,7 +81,7 @@ class EditProfile extends Component {
         city:this.state.venue_city,
         state: this.state.venue_state,
         genre: this.state.venue_genre,
-        max_bands: this.state.max_bands,
+        max_bands: this.state.venue_max_bands,
         about: this.state.venue_about,
         capacity: this.state.venue_capacity
       };

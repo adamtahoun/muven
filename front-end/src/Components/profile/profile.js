@@ -23,7 +23,7 @@ class Profile extends Component{
     console.log(props);
     this.state = {
       open: false,
-      bandName : 'Between The Buried and mme :D:D:D:D:D:D:D',
+      name : 'Between The Buried and mme :D:D:D:D:D:D:D',
       location : 'Raleigh, North Carolina',
       bio: 'Between the Buried and Me is an American progressive metal band from Raleigh, North Carolina. Formed in 2000, the band consists of Tommy Giles Rogers, Jr. (lead vocals, keyboards), Paul Waggoner (guitars, backing vocals), Dustie Waring (guitars), Dan Briggs (bass, keyboards), and Blake Richardson (drums).',
       upcomingShows: [{showName:"first show"},
@@ -32,8 +32,8 @@ class Profile extends Component{
 
       dateSelected: '',
       eventName:'',
-      venueName:'',
-      locationName:'',
+      artistName:'',
+
 
 
 
@@ -51,15 +51,14 @@ class Profile extends Component{
   };
 
   handleClick(event){
-    console.log(this.state.dateSelected.toString())
     var apiBaseUrl = "http://localhost:5000";
     var payload={
     "date": this.state.dateSelected,
-    "event":this.state.eventName,
-    "venue":this.state.venueName,
-    "location":this.state.locationName
+    "bookee":this.state.name,
+    "booker":this.state.artistName,
+
     }
-    axios.post(apiBaseUrl+'/profile', payload)
+    axios.post(apiBaseUrl+'/request', payload)
    .then( (response) => {
      console.log(response);
      if(response.data == 200){
@@ -105,7 +104,7 @@ class Profile extends Component{
     <Card>
 
       <CardMedia
-        overlay={<CardTitle title={this.state.bandName}subtitle={this.state.bandName} />}
+        overlay={<CardTitle title={this.state.name}subtitle={this.state.name} />}
       >
         <img src={pic} alt="" />
       </CardMedia>
@@ -116,7 +115,7 @@ class Profile extends Component{
     </Col>
     <Col xs={6} md={5} offset={{md:1}}>
     <center>
-    <h3 style={{fontSize : 44}}>{this.state.bandName}</h3>
+    <h3 style={{fontSize : 44}}>{this.state.name}</h3>
     <i>{this.state.location}</i>
     </center>
     <p>{this.state.bio}</p>
@@ -143,7 +142,7 @@ class Profile extends Component{
       label = "Request a Booking"
     />
     <Dialog
-      title = {"Fill out this form to book "+this.state.bandName}
+      title = {"Fill out this form to book at "+this.state.name}
       actions = {actions}
       modal = {false}
       open = {this.state.open}
@@ -160,15 +159,11 @@ class Profile extends Component{
    />
       <br/>
       <TextField
-           hintText = "Venue Name"
-           floatingLabelText="Which venue is it at?"
-           onChange = {(event, newValue) => this.setState({venueName:newValue})}
+           hintText = "Artist Name"
+           floatingLabelText="Name of Artist"
+           onChange = {(event, newValue) => this.setState({artistName:newValue})}
          />      <br/>
-         <TextField
-              hintText = "Venue Location"
-              floatingLabelText="Where is it located?"
-              onChange = {(event, newValue) => this.setState({locationName:newValue})}
-            />      <br/>
+
       </Dialog>
     </center>
     </Col>
@@ -186,7 +181,7 @@ class Profile extends Component{
         <div>
             <MuiThemeProvider>
         <Dialog
-        title = {"Thank for for booking "+this.state.bandName+" !!! this band/artist will be notified"}
+        title = {"Thank for for booking at "+this.state.name+" !!! this venue will be notified"}
         actions = {actions[0]}
         modal = {true}
         open = {this.state.open}
