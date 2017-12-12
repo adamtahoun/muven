@@ -157,11 +157,13 @@ def request_booking():
         booker = data.get('booker')
         bookee = data.get('bookee')
         date = data.get('date')
+        event_name = data.get('event_name')
 
         #record to be inserted
         booking_record = {"booker": booker,
                        "bookee": bookee,
                        "date" : date,
+                       "event_name": event_name,
                        "request" : 0  }
         #validate date
 
@@ -182,6 +184,19 @@ def request_booking():
         #ensures date is not already booked
         if( (booking.find_one({"booker": booker, "date": date}) == None) and (booking.find_one({"bookee": bookee, "date": date}) == None) ):
             booking.insert_one(booking_record)
+            user = mongo.db.user
+            #booking.find
+
+            bke = user.find_one({"name": bookee})
+            book_array = bke["bookings"]
+
+            book_array.append(booking_record)
+
+            update_record = {"bookings": book_array}
+
+            user.update_one({"name":bookee}, {"$set": update_record}, upsert=False)
+
+            print(book_array)
             return "200"
         else:
             return "400"
@@ -245,14 +260,12 @@ def profile():
 
     #user collection
     user = mongo.db.user
-
     if request.method == "GET":
         name = request.args.get('name')
         result = user.find_one({'name':name})
         print(result)
         result['_id'] = str(result['_id'])
         return jsonify(result)
-
     #checks if axious posted
     if request.method == "POST":
 
@@ -292,7 +305,6 @@ def profile():
             #gets the individual bits of data from the post
             type = data.get('type')
             name = data.get('name')
-            username = data.get('username')
             address = data.get('address')
             city = data.get('city')
             username = data.get('username')
@@ -308,10 +320,10 @@ def profile():
                              "address": address,
                              "city" : city,
                              "state": state,
-                             "name": name,
                              "genre": genre,
                              "about": about,
                              "capacity": capacity,
+                             "name": name,
                              "max_bands": max_bands,
                              "bookings": bookings}
 

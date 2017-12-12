@@ -23,7 +23,7 @@ class Profile extends Component{
     console.log(props);
     this.state = {
       open: false,
-      name : 'Between The Buried and mme :D:D:D:D:D:D:D',
+      name : this.props.location.state.name,
       location : 'Raleigh, North Carolina',
       bio: 'Between the Buried and Me is an American progressive metal band from Raleigh, North Carolina. Formed in 2000, the band consists of Tommy Giles Rogers, Jr. (lead vocals, keyboards), Paul Waggoner (guitars, backing vocals), Dustie Waring (guitars), Dan Briggs (bass, keyboards), and Blake Richardson (drums).',
       upcomingShows: [{showName:"first show"},
@@ -38,6 +38,20 @@ class Profile extends Component{
 
 
     };
+    var apiBaseUrl = "http://localhost:5000";
+    axios.get(apiBaseUrl+'/profile', {
+        params: {
+          name: this.props.location.state.name
+        }
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -56,6 +70,8 @@ class Profile extends Component{
     "date": this.state.dateSelected,
     "bookee":this.state.name,
     "booker":this.state.artistName,
+    "bookings": this.state.upcomingShows,
+    "event_name" : this.state.eventName
 
     }
     axios.post(apiBaseUrl+'/request', payload)
