@@ -30,7 +30,7 @@ class Profile extends Component{
       {showName:"second show"},
       {showName:"third show"}],
 
-      dateSelected: null,
+      dateSelected: '',
       eventName:'',
       venueName:'',
       locationName:'',
@@ -47,9 +47,11 @@ class Profile extends Component{
 
   handleClose = () => {
     this.setState({open : false});
+    this.setState({redirect: false});
   };
 
   handleClick(event){
+    console.log(this.state.dateSelected.toString())
     var apiBaseUrl = "http://localhost:5000";
     var payload={
     "date": this.state.dateSelected,
@@ -60,7 +62,7 @@ class Profile extends Component{
     axios.post(apiBaseUrl+'/profile', payload)
    .then( (response) => {
      console.log(response);
-     if(response.status == 200){
+     if(response.data == 200){
        console.log("booking successfull");
 			 this.setState({redirect: true});
      }
@@ -74,9 +76,10 @@ class Profile extends Component{
 
 
   render(){
+
     const actions = [
     <FlatButton
-      label="Cancel"
+      label="Go back"
       primary={true}
       keyboardFocused={true}
       onClick={this.handleClose}
@@ -86,10 +89,10 @@ class Profile extends Component{
       primary={true}
       keyboardFocused={true}
       onClick={(event) => this.handleClick(event)}
+
     />
   ];
-
-
+  if(!this.state.redirect){
     return(
       <div>
           <MuiThemeProvider>
@@ -175,7 +178,25 @@ class Profile extends Component{
 
         </MuiThemeProvider>
       </div>
-    )
+    )}
+  if (this.state.redirect) {
+
+      return (
+        <div>
+            <MuiThemeProvider>
+        <Dialog
+        title = {"Thank for for booking "+this.state.bandName+" !!! this band/artist will be notified"}
+        actions = {actions[0]}
+        modal = {true}
+        open = {this.state.open}
+        onRequestClose = {this.handleClose}
+        />
+          </MuiThemeProvider>
+        </div>
+      );
+        this.setState({redirect: false});
+  }
+
   }
 
 }
