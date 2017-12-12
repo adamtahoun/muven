@@ -12,7 +12,8 @@ class SearchBar extends Component {
   constructor(props){
     super(props)
     this.state = {
-      redirect: false
+      redirect: false,
+      search_query: ""
     }
     this.handleClick = this.handleClick.bind(this);
     console.log(this.props);
@@ -25,7 +26,14 @@ class SearchBar extends Component {
 render(){
 
   if (this.state.redirect && !this.props.resultPage) {
-      return(<Redirect push to="/results" />);
+    return(
+    <Redirect
+      to={{
+        pathname: "/results",
+        state: { search_query: this.state.search_query }
+      }}
+    />
+  );
   }
 
   return(
@@ -35,6 +43,9 @@ render(){
     <TextField hintText = "Search by name or location!"
       fullWidth={true}
       className="SearchBar-input"
+      onChange={(event,newValue) =>
+        this.setState({search_query:newValue})
+      }
     />
     </div>
     <RaisedButton className="SearchBar-button" onClick={(event) => this.handleClick(event)}>Search</RaisedButton>

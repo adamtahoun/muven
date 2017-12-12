@@ -8,6 +8,7 @@ class SearchResult extends Component{
 
     constructor(props){
       super(props);
+      console.log(this.locat)
       this.state = {
         resList : {}
       }
