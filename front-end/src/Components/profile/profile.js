@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle } from 'material-ui/Card';
 import {Link} from 'react-router-dom';
@@ -8,8 +9,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import NavBar from '../nav_bar/nav_bar';
 import { Container, Row, Col} from 'react-grid-system';
 import DatePicker, {Calendar} from 'material-ui/DatePicker';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
-import Popover from 'material-ui/Popover';
+
 
 import pic from './images/btbam.jpg';
 
@@ -20,24 +23,73 @@ class Profile extends Component{
 
     this.state = {
       open: false,
+      bandName : 'Between The Buried and mme :D:D:D:D:D:D:D',
+      location : 'Raleigh, North Carolina',
+      bio: 'Between the Buried and Me is an American progressive metal band from Raleigh, North Carolina. Formed in 2000, the band consists of Tommy Giles Rogers, Jr. (lead vocals, keyboards), Paul Waggoner (guitars, backing vocals), Dustie Waring (guitars), Dan Briggs (bass, keyboards), and Blake Richardson (drums).',
+      upcomingShows: [{showName:"first show"},
+      {showName:"second show"},
+      {showName:"third show"}],
+
+      dateSelected: null,
+      eventName:'',
+      venueName:'',
+      locationName:'',
+
+
+
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
-  handleTouchTap = (event) => {
-    event.preventDefault();
-
-    this.setState({
-      open: true,
-      anchorEl: event.currentTarget,
-    });
+  handleOpen = () => {
+    this.setState({open : true});
   };
 
-  handleRequestClose = () => {
-    this.setState({
-      open:false,
-    });
+  handleClose = () => {
+    this.setState({open : false});
   };
+
+  handleClick(event){
+    var apiBaseUrl = "http://localhost:5000";
+    var payload={
+    "date": this.state.dateSelected,
+    "event":this.state.eventName,
+    "venue":this.state.venueName,
+    "location":this.state.locationName
+    }
+    axios.post(apiBaseUrl+'/profile', payload)
+   .then( (response) => {
+     console.log(response);
+     if(response.status == 200){
+       console.log("booking successfull");
+			 this.setState({redirect: true});
+     }
+   })
+   .catch((error) => {
+     console.log(error);
+   });
+
+}
+
+
+
   render(){
+    const actions = [
+    <FlatButton
+      label="Cancel"
+      primary={true}
+      keyboardFocused={true}
+      onClick={this.handleClose}
+    />,
+    <FlatButton
+      label="Book"
+      primary={true}
+      keyboardFocused={true}
+      onClick={(event) => this.handleClick(event)}
+    />
+  ];
+
+
     return(
       <div>
           <MuiThemeProvider>
@@ -50,7 +102,7 @@ class Profile extends Component{
     <Card>
 
       <CardMedia
-        overlay={<CardTitle title="BTBAM" subtitle="Between the Buried and Me" />}
+        overlay={<CardTitle title={this.state.bandName}subtitle={this.state.bandName} />}
       >
         <img src={pic} alt="" />
       </CardMedia>
@@ -61,40 +113,60 @@ class Profile extends Component{
     </Col>
     <Col xs={6} md={5} offset={{md:1}}>
     <center>
-    <h3 style={{fontSize : 44}}>Between The Buried and Me</h3>
-    <i>Raleigh, North Carolina</i>
+    <h3 style={{fontSize : 44}}>{this.state.bandName}</h3>
+    <i>{this.state.location}</i>
     </center>
-    <p>Between the Buried and Me is an American progressive metal band from Raleigh, North Carolina. Formed in 2000, the band consists of Tommy Giles Rogers, Jr. (lead vocals, keyboards), Paul Waggoner (guitars, backing vocals), Dustie Waring (guitars), Dan Briggs (bass, keyboards), and Blake Richardson (drums).</p>
+    <p>{this.state.bio}</p>
     </Col>
   </Row>
   <br />
   <Row >
     <Col xs={6}  ><h3>Upcoming Shows</h3>
     <ul>
-    <li>Chuckie cheese</li>
-      <li>FIU ECS lab</li>
-        <li>PG6</li>
-          <li>golden corral</li>
-            <li>cracker barrel</li>
+    {this.state.upcomingShows.map((show)=>{
+      return (
+        <li>
+        {show.showName}
+        </li>
+      )
+    })}
     </ul>
 </Col>
 
     <Col xs={4}  >
     <center>
     <RaisedButton
-      onClick = {this.handleTouchTap}
-      label = "See available booking dates"
+      onClick = {this.handleOpen}
+      label = "Request a Booking"
     />
-    <Popover
+    <Dialog
+      title = {"Fill out this form to book "+this.state.bandName}
+      actions = {actions}
+      modal = {false}
       open = {this.state.open}
-      anchorEl = {this.state.anchorEl}
-      anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-      targetOrigin={{horizontal: 'left', vertical: 'top'}}
-      onRequestClose = {this.handleRequestClose}
-    >
-    <DatePicker/>
-    </Popover>
 
+      onRequestClose = {this.handleClose}>
+
+      <DatePicker hintText = "Pick a date"
+      onChange = {(event, newValue) => this.setState({dateSelected:newValue})}
+      />
+      <TextField
+     hintText = "Event Name"
+     floatingLabelText="What's the event name?"
+     onChange = {(event, newValue) => this.setState({eventName:newValue})}
+   />
+      <br/>
+      <TextField
+           hintText = "Venue Name"
+           floatingLabelText="Which venue is it at?"
+           onChange = {(event, newValue) => this.setState({venueName:newValue})}
+         />      <br/>
+         <TextField
+              hintText = "Venue Location"
+              floatingLabelText="Where is it located?"
+              onChange = {(event, newValue) => this.setState({locationName:newValue})}
+            />      <br/>
+      </Dialog>
     </center>
     </Col>
   </Row>
