@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Card, CardActions } from "material-ui/Card";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Tabs, Tab } from "material-ui/Tabs";
 import TextField from "material-ui/TextField";
 import Divider from "material-ui/Divider";
@@ -45,9 +45,9 @@ class EditProfile extends Component {
       venue_max_bands: "",
       venue_capacity: "",
       venue_genre: "",
-      venue_about: ""
+      venue_about: "",
+      redirect: false
     };
-
   }
 
   handleChange = value => {
@@ -59,19 +59,22 @@ class EditProfile extends Component {
   handleClick(event) {
     var apiBaseUrl = "http://localhost:5000";
     var payload;
+    console.log(this.props.location.state.username);
     if(this.state.value === "artist"){
       payload = {
-        type: this.state.type,
+        username: this.props.location.state.username,
+        type: this.state.value,
         name: this.state.artist_name,
         address: this.state.artist_address,
         city:this.state.artist_city,
-        state: this.state.artist_genre,
+        state: this.state.artist_state,
         genre: this.state.artist_genre,
         about: this.state.artist_about
       };
     }
     else{
       payload = {
+        username: this.props.location.state.username,
         type: this.state.type,
         name: this.state.venue_name,
         address: this.state.venue_address,
@@ -83,12 +86,14 @@ class EditProfile extends Component {
         capacity: this.state.venue_capacity
       };
     }
+    console.log(payload)
     axios
       .post(apiBaseUrl + "/profile", payload)
       .then(response => {
         console.log(response);
         if(response.data == 200){
           console.log("edit success!");
+          this.setState({redirect:true})
         }
       })
       .catch(error =>{
@@ -97,6 +102,23 @@ class EditProfile extends Component {
   }
 
   render() {
+    if(this.state.redirect){
+      var name;
+      if(this.state.value === "artist"){
+         name = this.state.artist_name;
+      }
+      else{
+        name = this.state.venue_name;
+      }
+      return (    <Redirect
+            to={{
+              pathname: "/profile",
+              state: { username: this.props.location.state.username,
+                       name: name
+                      }
+            }}
+          />)
+    }
     return (
       <div className="EditProfile">
         <MuiThemeProvider>

@@ -20,7 +20,7 @@ class Profile extends Component{
 
   constructor(props){
     super(props);
-
+    console.log(props);
     this.state = {
       open: false,
       bandName : 'Between The Buried and mme :D:D:D:D:D:D:D',
