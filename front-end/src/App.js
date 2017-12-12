@@ -14,7 +14,7 @@ class App extends Component {
           <NavBar/>
            <center>
           <h2>Muven</h2>
-          <h5>Booking and Networking Apllication <br/> for Musicians and Venues</h5>
+          <h5>Booking and Networking Application <br/> for Musicians and Venues</h5>
           <SearchBar />
 		  </center>
 		  </div>

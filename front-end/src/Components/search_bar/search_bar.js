@@ -7,10 +7,6 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
 
-
-
-
-
 class SearchBar extends Component {
 
   constructor(props){

@@ -147,6 +147,7 @@ class Profile extends Component{
       actions = {actions}
       modal = {false}
       open = {this.state.open}
+
       onRequestClose = {this.handleClose}>
 
       <DatePicker hintText = "Pick a date"
