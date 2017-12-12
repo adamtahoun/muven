@@ -245,9 +245,13 @@ def profile():
 
     #user collection
     user = mongo.db.user
-    
+
     if request.method == "GET":
-        return "200"
+        name = request.args.get('name')
+        result = user.find_one({'name':name})
+        print(result)
+        result['_id'] = str(result['_id'])
+        return jsonify(result)
 
     #checks if axious posted
     if request.method == "POST":
