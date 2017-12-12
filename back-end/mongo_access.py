@@ -1,5 +1,5 @@
 
-from werkzeug import generate_password_hash
+from werkzeug import generate_password_hash, check_password_hash
 
 import requests
 import os
@@ -31,6 +31,55 @@ app.secret_key = "muven4-key"
 def hello():
     return "testing get results"
 
+
+#TODO
+#backend functionality to display bookings list
+@app.route('/List',  methods=['POST','GET'] )
+#get the data for search criteria
+    data = request.get_json(silent=True)
+    
+    #user collection 
+    user = mongo.db.user
+    
+    if request.method == "GET":
+        #get username
+        username = data.get('username')
+        
+        #======================
+        # retrieve all bookings where user is a booker
+        # retrieve all bookings where user is a bookee
+        # seperate bookings by accepted/pending/cancelled
+        # request value determines status; 1= accepted 0 = pending, -1 = cancelled
+        #=======================
+        
+        return 400 #user does not exist
+        
+        
+    return 500 #not get
+
+#TODO
+#backend functionality to display profile information
+@app.route('/display',  methods=['POST','GET'] )
+#get the data for search criteria
+    data = request.get_json(silent=True)
+    
+    #user collection 
+    user = mongo.db.user
+    
+    if request.method == "GET":
+        #get username
+        username = data.get('username')
+        
+        #======================
+        # get all info from a user
+        # return all data as JSON object
+        #
+        #=======================
+        
+        return 400 #user does not exist
+        
+        
+    return 500 #Not Get
 
 #reject a booking request
 @app.route('/reject',  methods=['POST','GET'] )
@@ -75,12 +124,7 @@ def accept_booking():
         booker = data.get('booker')
         bookee = data.get('bookee')
         date = data.get('date')
-        
-        
-        
-        
-        
-        
+
         #update the request to accepted
         result = booking.update_one({"booker": booker, "date" : date}, {"$set": {"request": 1}}, upsert=False)
     
