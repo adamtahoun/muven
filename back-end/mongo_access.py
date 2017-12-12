@@ -35,21 +35,21 @@ def hello():
 def request_booking():
     #get the data for search criteria
     data = request.get_json(silent=True)
-    
-    #user collection 
-    user = mongo.db.user 
+
+    #user collection
+    user = mongo.db.user
 
 #to be programmed search backend
 @app.route('/search', methods=['POST','GET'])
 def search():
     #get the data for search criteria
     data = request.get_json(silent=True)
-    
-    #user collection 
-    user = mongo.db.user 
-    
+
+    #user collection
+    user = mongo.db.user
+
     #checks if axious posted
-    if request.method == "POST":        
+    if request.method == "POST":
         #get data from axios?
         search = data.get('search')
         search_params = search.split(" ")
@@ -81,19 +81,19 @@ def search():
             e['_id'] = str(e['_id'])
             result.append(e)
         return jsonify(result)
-        
+
     return 400
-        
-    
+
+
 
 @app.route('/profile', methods=['POST','GET'])
 def profile():
     #gets the data from the post
     data = request.get_json(silent=True)
-    
-    #user collection 
-    user = mongo.db.user 
-    
+
+    #user collection
+    user = mongo.db.user
+
     #checks if axious posted
     if request.method == "POST":
 
@@ -107,7 +107,7 @@ def profile():
             genre = data.get('genre')
             about = data.get('about')
             bookings = []
-        
+
             #what parts of a record to update
             update_record = {"type": type,
                              "address": address,
@@ -116,13 +116,13 @@ def profile():
                              "genre": genre,
                              "about": about,
                              "bookings": bookings}
-        
+
             #updates the document
             result = user.update_one({'username':name}, {"$set": update_record}, upsert=False)
             #tests to see if update occurred
             if result.matched_count:
                 return "200"
-        
+
             #update failed
             return "400"
 
@@ -138,7 +138,7 @@ def profile():
             capacity = data.get('capacity')
             max_bands = data.get('max_bands')
             bookings = []
-        
+
             #what parts of a record to update
             update_record = {"type": type,
                              "address": address,
@@ -149,13 +149,13 @@ def profile():
                              "capacity": capacity,
                              "max_bands": max_bands,
                              "bookings": bookings}
-        
+
             #updates the document
             result = user.update_one({'username':name}, {"$set": update_record}, upsert=False)
             #tests to see if update occurred
             if result.matched_count:
                 return "200"
-        
+
             #update failed
             return "400"
     #update failed
@@ -171,29 +171,29 @@ def sign_up():
         #if 'venue' in data:
         #    user = mongo.db.venue
         user = mongo.db.user #user collection until artist/venue functionality added
-        
+
         #gather data
         name = data.get('first_name')
         email = data.get('email')
         #verify that passwords match and encrypt the password
-        if (data.get('password') == data.get('confirm')): 
+        if (data.get('password') == data.get('confirm')):
             pwdhash = data.get('password') #generate_password_hash(data.get('password'))
-        
+
         #user record to be stored
         user_record = {"username": name,
                        "email": email,
                        "password" : pwdhash   }
-        
+
         #if the email is already in use
         if user.find_one({"email": email}):
-            return "409" 
+            return "409"
         #if the username is already in use
         elif user.find_one({"username": name}) :
             return "406" #username already in use error
         else:
             user.insert_one(user_record)
             return "200" #successfully registered
-        
+
     return "400" #nothing posted
 
 @app.route('/login', methods=['POST'])
@@ -203,28 +203,23 @@ def login():
         #artist = mongo.db.artist
         #venue = mondo.db.venue
         user = mongo.db.user #user collection until artist/venue functionality added
-        
+
         #get data from axios?
         username = data.get('username')
         pwdhash  = data.get('password')#generate_password_hash(data.get('password'))
-        
-        #This would check both collections for the username/password combo
-        #if venue.find_one({"email": email, "password": pwdhash}) != None:
-        #    return 200 #logged in as a venue
-        #elif artist.find_one({"email": email, "password": pwdhash}) != None:
-        #    return 200 #logged in as an artist
-        
+
+
         #if username and password find no match
         if(user.find_one({"username": username, "password": pwdhash}) != None):
-            return "204"
+            return "200"
         elif(user.find_one({"username": username}) != None):
-            return "0" #no matches
-        
-        return "400" #nothing posted -must enter username and password-
-    
-    return "404" #nothing posted
-    
+            return "204" #no matches
 
-    
+        return "400" #nothing posted -must enter username and password-
+
+    return "404" #nothing posted
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
