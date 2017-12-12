@@ -245,6 +245,9 @@ def profile():
 
     #user collection
     user = mongo.db.user
+    
+    if request.method == "GET":
+        return "200"
 
     #checks if axious posted
     if request.method == "POST":
@@ -285,6 +288,7 @@ def profile():
             #gets the individual bits of data from the post
             type = data.get('type')
             name = data.get('name')
+            username = data.get('username')
             address = data.get('address')
             city = data.get('city')
             state = data.get('state')
@@ -299,6 +303,7 @@ def profile():
                              "address": address,
                              "city" : city,
                              "state": state,
+                             "name": name,
                              "genre": genre,
                              "about": about,
                              "capacity": capacity,
@@ -306,7 +311,7 @@ def profile():
                              "bookings": bookings}
 
             #updates the document
-            result = user.update_one({'username':name}, {"$set": update_record}, upsert=False)
+            result = user.update_one({'username':username}, {"$set": update_record}, upsert=False)
             #tests to see if update occurred
             if result.matched_count:
                 return "200"
