@@ -168,16 +168,16 @@ def request_booking():
         #getting current date
         today = datetime.now()
 
-        #getting booking date
-        book_date = datetime.strptime(date, '%m/%d/%y')
-
-        #booking more than 6 months in advance
-        if (book_date - today).days >180:
-            return "401"
-
-        #ensure that the booking date is in the future
-        if (book_date - today).days < 1:
-            return "402"
+        # #getting booking date
+        # book_date = datetime.strptime(date, '%m/%d/%y')
+        #
+        # #booking more than 6 months in advance
+        # if (book_date - today).days >180:
+        #     return "401"
+        #
+        # #ensure that the booking date is in the future
+        # if (book_date - today).days < 1:
+        #     return "402"
 
         #ensures date is not already booked
         if( (booking.find_one({"booker": booker, "date": date}) == None) and (booking.find_one({"bookee": bookee, "date": date}) == None) ):
@@ -287,6 +287,7 @@ def profile():
             name = data.get('name')
             address = data.get('address')
             city = data.get('city')
+            username = data.get('username')
             state = data.get('state')
             genre = data.get('genre')
             about = data.get('about')
@@ -306,7 +307,7 @@ def profile():
                              "bookings": bookings}
 
             #updates the document
-            result = user.update_one({'username':name}, {"$set": update_record}, upsert=False)
+            result = user.update_one({'username':username}, {"$set": update_record}, upsert=False)
             #tests to see if update occurred
             if result.matched_count:
                 return "200"

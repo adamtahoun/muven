@@ -75,13 +75,13 @@ class EditProfile extends Component {
     else{
       payload = {
         username: this.props.location.state.username,
-        type: this.state.type,
+        type: this.state.value,
         name: this.state.venue_name,
         address: this.state.venue_address,
         city:this.state.venue_city,
         state: this.state.venue_state,
         genre: this.state.venue_genre,
-        max_bands: this.state.max_bands,
+        max_bands: this.state.venue_max_bands,
         about: this.state.venue_about,
         capacity: this.state.venue_capacity
       };
